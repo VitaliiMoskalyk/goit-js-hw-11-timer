@@ -33,52 +33,54 @@ const template = () => `
 
 class CountdownTimer{
     constructor({ selector, targetDate }) {
+        this.targetDate = targetDate;
+        this.selector = selector;
+    }
     
-    document.querySelector(selector).insertAdjacentHTML('beforeend', template());
-    
-    const daysRef = document.querySelector('[data-value="days"]');
-    const hoursRef = document.querySelector('[data-value="hours"]');
-    const minsRef = document.querySelector('[data-value="mins"]');
-    const secsRef = document.querySelector('[data-value="secs"]');
+    getRefs() {
+        const daysRef = document.querySelector(`${this.selector} span[data-value="days"]`);
+        const hoursRef = document.querySelector(`${this.selector} span[data-value="hours"]`);
+        const minsRef = document.querySelector(`${this.selector} span[data-value="mins"]`);
+        const secsRef = document.querySelector(`${this.selector} span[data-value="secs"]`);
 
+        return { daysRef, hoursRef, minsRef, secsRef };
+    }
     
-    function getDate(targetDate) {
-        const time = new Date(targetDate) - new Date();
+    getDate(target) {
+        const time = new Date(target) - new Date();
         
         const days = Math.floor(time / (1000 * 60 * 60 * 24));
-        const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-        const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-        const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+        const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+        const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+        const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
 
         return { days, hours, mins, secs };
-        
-        
     };
 
-    function pad(value) {
+    pad(value) {
         return String(value).padStart(2, '0')
     };
     
     
-    setInterval(() => {
-        if (new Date(targetDate) >= new Date()) {
-            daysRef.textContent = getDate(targetDate).days;
-            hoursRef.textContent = getDate(targetDate).hours;
-            minsRef.textContent = getDate(targetDate).mins;
-            secsRef.textContent = getDate(targetDate).secs;
-        }
-        else {
-            daysRef.textContent = '0';
-            hoursRef.textContent = '0';
-            minsRef.textContent = '0';
-            secsRef.textContent = '0';
-         }
-}, 100);
+    start() {
+        document.querySelector(this.selector).insertAdjacentHTML('beforeend', template());
 
+        setInterval(() => {
+            if (new Date(this.targetDate) >= new Date()) {
+               this.getRefs().daysRef.textContent = this.getDate(this.targetDate).days;
+               this.getRefs().hoursRef.textContent = this.getDate(this.targetDate).hours;
+               this.getRefs().minsRef.textContent = this.getDate(this.targetDate).mins;
+               this.getRefs().secsRef.textContent = this.getDate(this.targetDate).secs;
+            }
+            else {
+                this.getRefs().daysRef.textContent = '0';
+                this.getRefs().hoursRef.textContent = '0';
+                this.getRefs().minsRef.textContent = '0';
+                this.getRefs().secsRef.textContent = '0';
+            }
+        }, 100);
+    }
 }
-    
-}
-
 
 
 export default CountdownTimer;
