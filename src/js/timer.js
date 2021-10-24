@@ -29,8 +29,6 @@ const template = () => `
   </div>
   `;
 
-
-
 class CountdownTimer{
     constructor({ selector, targetDate }) {
         this.targetDate = targetDate;
@@ -71,15 +69,66 @@ class CountdownTimer{
                this.getRefs().hoursRef.textContent = this.getDate(this.targetDate).hours;
                this.getRefs().minsRef.textContent = this.getDate(this.targetDate).mins;
                this.getRefs().secsRef.textContent = this.getDate(this.targetDate).secs;
+                this.wordsEndings();
+                
             }
             else {
                 this.getRefs().daysRef.textContent = '0';
-                this.getRefs().hoursRef.textContent = '0';
-                this.getRefs().minsRef.textContent = '0';
-                this.getRefs().secsRef.textContent = '0';
+                this.getRefs().hoursRef.textContent = '00';
+                this.getRefs().minsRef.textContent = '00';
+                this.getRefs().secsRef.textContent = '00';
             }
         }, 100);
     }
+
+    wordsEndings() {
+        const daysEnd = document.querySelector(`${this.selector} .uncorrectDays`);
+        const hoursEnd = document.querySelector(`${this.selector} .uncorrectHours`);
+        const minsEnd = document.querySelector(`${this.selector} .uncorrectMinutes`);
+        const secsEnd = document.querySelector(`${this.selector} .uncorrectSeconds`);
+
+        
+        switch (this.getRefs().secsRef.textContent) {
+                    case '01':
+                secsEnd.textContent = "Second";
+                    break;
+                
+            default:
+                secsEnd.textContent = "Seconds";
+                        break;
+                }
+        
+        switch (this.getRefs().minsRef.textContent) {
+                    case '01':
+                minsEnd.textContent = "Minute";
+                    break;
+                
+            default:
+                minsEnd.textContent = "Minutes";
+                        break;
+        }
+        switch (this.getRefs().hoursRef.textContent) {
+                    case '01':
+                hoursEnd.textContent = "Hour";
+                    break;
+                
+            default:
+                hoursEnd.textContent = "Hours";
+                        break;
+        }
+        switch (this.getRefs().daysRef.textContent) {
+                    case '1':
+                daysEnd.textContent = "Day";
+                    break;
+                
+            default:
+                daysEnd.textContent = "Days";
+                        break;
+                }
+
+    }
+
+
 }
 
 
